@@ -11,7 +11,7 @@ AS
 	DECLARE @newNodeId BIGINT
 	WHILE (@i < @numInitialNodes)
 	BEGIN
-		execute InsertRandomNode  @newNodeId output
-		set @i = @i + 1
+		EXECUTE InsertRandomNode @newNodeId OUTPUT
+		SET @i = @i + 1
 	END
 RETURN

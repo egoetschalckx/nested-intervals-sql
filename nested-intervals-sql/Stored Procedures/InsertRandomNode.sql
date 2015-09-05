@@ -7,9 +7,11 @@ AS
 	DECLARE @internalNewNodeId BIGINT
 	DECLARE @parentNodeId BIGINT
 
-	SELECT @name = cast(crypt_gen_random(8) AS NVARCHAR(64))
+	-- random UTF-8 string as name
+	SELECT @name = CAST(CRYPT_GEN_RANDOM(8) AS NVARCHAR(64))
 
-	SELECT TOP 1 @parentNodeId = node_id FROM [Node] ORDER BY NEWID()
+	-- query for random parent
+	SELECT TOP 1 @parentNodeId = [node_id] FROM [Node] ORDER BY NEWID()
 
 	EXECUTE InsertNode @parentNodeId, @name, @internalNewNodeId OUTPUT
 

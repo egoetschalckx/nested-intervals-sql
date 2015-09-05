@@ -57,5 +57,26 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="Functions" />
+    <Folder Include="Stored Procedures" />
+    <Folder Include="Tables" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Functions\GetAncestors.sql" />
+    <Build Include="Functions\GetDescendants.sql" />
+    <Build Include="Stored Procedures\BrokenTree1.sql" />
+    <Build Include="Stored Procedures\DeleteNode.sql" />
+    <Build Include="Stored Procedures\DeleteRandomNode.sql" />
+    <Build Include="Stored Procedures\InsertNode.sql" />
+    <Build Include="Stored Procedures\InsertRandomNode.sql" />
+    <Build Include="Stored Procedures\ResetTree.sql" />
+    <Build Include="Tables\Node.sql" />
+    <Build Include="Stored Procedures\MoveNode.sql" />
+    <Build Include="Stored Procedures\MatrixMultiply2x2.sql" />
+    <Build Include="Stored Procedures\CalcFractionAfterMove.sql" />
+    <Build Include="Functions\GetChildrenWithNumbers.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nested-intervals-sql.publish.xml" />
   </ItemGroup>
 </Project>

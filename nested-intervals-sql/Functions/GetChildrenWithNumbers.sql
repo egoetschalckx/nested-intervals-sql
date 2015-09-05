@@ -1,6 +1,5 @@
-﻿CREATE FUNCTION GetDescendants(
-	@parentNodeId BIGINT,
-	@numGenerations INT
+﻿CREATE FUNCTION GetChildrenWithNumbers(
+	@parentNodeId BIGINT
 ) RETURNS @childtable TABLE (
 	node_id BIGINT NOT NULL,
 	name NVARCHAR(64) NOT NULL,
@@ -9,7 +8,8 @@
 	snv BIGINT NOT NULL,
 	sdv BIGINT NOT NULL,
 	depth INT NOT NULL,
-	parent_node_id BIGINT NOT NULL)
+	parent_node_id BIGINT NOT NULL,
+	c BIGINT IDENTITY(1, 1))
 AS
 BEGIN
 	IF @parentNodeId = NULL
@@ -33,15 +33,16 @@ BEGIN
 	WHERE n.[node_id] = @parentNodeId
 
 	INSERT INTO @childtable
-	SELECT n.[node_id], n.[name], n.[nv], n.[dv], n.[snv], n.[sdv], n.[depth], n.[parent_node_id]
-	FROM [Node] AS n
-	WHERE
-		(CAST(n.[nv] AS FLOAT) / n.[dv]) > (CAST(@nvp AS FLOAT) / @dvp) 
-		and 
-		(CAST(n.[nv] AS FLOAT) / n.[dv]) < (CAST(@snvp AS FLOAT) / @sdvp) 
-		and (@numGenerations = -1 or n.[depth]  <= @parentDepth + @numGenerations)
-	--ORDER BY n.[depth] ASC, n.[parent_node_id] ASC--, (cast(n.[nv] AS FLOAT) / n.[dv]) ASC
-	-- note: this commented line is my only real use of [parent_node_id]
+	SELECT 
+		c.[node_id], 
+		c.[name], 
+		c.[nv], 
+		c.[dv], 
+		c.[snv], 
+		c.[sdv], 
+		c.[depth], 
+		c.[parent_node_id]
+	FROM GetDescendants(@parentNodeId, 1) AS c
 
 	RETURN
 END

@@ -1,7 +1,7 @@
 ﻿CREATE FUNCTION GetAncestors(
 	@nodeId BIGINT,
 	@numGenerations INT
-) returns @ancestortable TABLE (
+) RETURNS @ancestortable TABLE (
 	node_id BIGINT NOT NULL,
 	name NVARCHAR(64) NOT NULL,
 	nv BIGINT NOT NULL, 
@@ -29,9 +29,9 @@ begin
 	FROM [Node] AS n
 	WHERE n.[node_id] = @nodeId
 	
-	-- todo: loop appears to include [Node] itself
-	while @numerator > 0 and @denominator > 0
-	begin
+	-- todo: loop appears to include node itself, but maybe the math is slightly wrong and it shouldnt? blocked it with a where
+	WHILE @numerator > 0 and @denominator > 0
+	BEGIN
 		SET @div = @numerator / @denominator
 		SET @mod = @numerator % @denominator
 		SET @ancnv = @ancnv + @div * @ancsnv
@@ -39,25 +39,25 @@ begin
 		SET @ancsnv = @ancnv + @ancsnv
 		SET @ancsdv = @ancdv + @ancsdv
 		
-		insert into @ancestortable
-		SELECT node_id, name, nv, dv, snv, sdv, depth, parent_node_id
+		INSERT INTO @ancestortable
+		SELECT [node_id], [name], [nv], [dv], [snv], [sdv], [depth], [parent_node_id]
 		FROM [Node]
 		WHERE 
-			nv = @ancnv 
-			and dv = @ancdv
-			and node_id <> @nodeId
-			and (@numGenerations = -1 or depth >= @depth - @numGenerations)
+			[nv] = @ancnv 
+			AND [dv] = @ancdv
+			AND [node_id] <> @nodeId
+			AND (@numGenerations = -1 OR [depth] >= @depth - @numGenerations)
 		
 		SET @numerator = @mod
 		
-		if @numerator <> 0
-		begin
+		IF @numerator <> 0
+		BEGIN
 			SET @denominator = @denominator % @mod
-			if @denominator = 0
-			begin
+			IF @denominator = 0
+			BEGIN
 				SET @denominator = 1
-			end
-		end
-	end
+			END
+		END
+	END
 	RETURN
-end
+END
